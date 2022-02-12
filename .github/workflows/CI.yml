@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: "Build"
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
       - name: Checkout
@@ -19,52 +19,37 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cache msys64
-        id: cache-msys64
-        uses: actions/cache@v2
-        with:
-          path: media-autobuild_suite/msys64
-          key: ffmpeg-msys64
+      - name: Cross compile
+        shell: bash
+        working-directory: ffmpeg-windows-build-helpers
+        run: |
+          ./cross_compile_ffmpeg.sh -h
 
-      - name: Copy sunshine-prebuilt config files
-        shell: pwsh
-        run: cp build/*.* media-autobuild_suite/build/
-
-      - name: Replace do_prompt
-        shell: pwsh
-        working-directory: media-autobuild_suite
-        run: sed -i 's/do_prompt /echo /g' build/media-suite_helper.sh build/media-suite_compile.sh
-
-      - name: Compile the suite
-        shell: cmd
-        working-directory: media-autobuild_suite
-        run: media-autobuild_suite.bat
-
-      - name: Create pre-compiled artifact
-        shell: cmd
-        run: scripts\create-pre-compiled.bat
-
-      - name: Upload Artifacts
-        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: pre-compiled
-          path: pre-compiled/
-
-      - name: Create pre-compiled.zip
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        shell: pwsh
-        run: Compress-Archive -Path pre-compiled\* -DestinationPath pre-compiled.zip
-
-      - name: Create/Update GitHub Release
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        uses: ncipollo/release-action@v1  # https://github.com/ncipollo/release-action
-        with:
-          name: Release ${{ github.ref }}
-          tag: ${{ github.ref }}
-          artifacts: pre-compiled.zip
-          artifactContentType: application/zip
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
-          body: |
-            Prebuilt ffmpeg libs for sunshine
+#      - name: Create pre-compiled artifact
+#        shell: cmd
+#        run: scripts\create-pre-compiled.bat
+#
+#      - name: Upload Artifacts
+#        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: pre-compiled
+#          path: pre-compiled/
+#
+#      - name: Create pre-compiled.zip
+#        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+#        shell: pwsh
+#        run: Compress-Archive -Path pre-compiled\* -DestinationPath pre-compiled.zip
+#
+#      - name: Create/Update GitHub Release
+#        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+#        uses: ncipollo/release-action@v1  # https://github.com/ncipollo/release-action
+#        with:
+#          name: Release ${{ github.ref }}
+#          tag: ${{ github.ref }}
+#          artifacts: pre-compiled.zip
+#          artifactContentType: application/zip
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          allowUpdates: true
+#          body: |
+#            Prebuilt ffmpeg libs for sunshine
