@@ -24,6 +24,7 @@ jobs:
         working-directory: ffmpeg-windows-build-helpers
         run: |
           ./cross_compile_ffmpeg.sh -h
+          ./cross_compile_ffmpeg.sh --build-ffmpeg-shared=y --compiler-flavors=win64 -d
 
 #      - name: Create pre-compiled artifact
 #        shell: cmd
