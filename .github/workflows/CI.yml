@@ -19,11 +19,20 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Update dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install subversion ragel curl texinfo g++ ed bison flex cvs yasm automake libtool autoconf gcc cmake git make pkg-config zlib1g-dev unzip pax nasm gperf autogen bzip2 autoconf-archive p7zip-full meson clang python3-distutils python-is-python3 -y
+
       - name: Cross compile
         shell: bash
         working-directory: ffmpeg-windows-build-helpers
         run: |
+          # print help
           ./cross_compile_ffmpeg.sh -h
+
+          # compile
           ./cross_compile_ffmpeg.sh --build-ffmpeg-shared=y --compiler-flavors=win64 -d
 
 #      - name: Create pre-compiled artifact
