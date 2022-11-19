@@ -231,5 +231,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v1
         with:
-          name: ffmpeg-${{ matrix.target }}
-          path: artifacts/
+          name: pre-compiled-${{ matrix.target }}
+          path: |
+            ~/ffmpeg_build/include/
+            ~/ffmpeg_build/lib/
