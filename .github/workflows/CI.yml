@@ -224,11 +224,15 @@ jobs:
       TARGET: ${{ matrix.target }}
     steps:
       - uses: actions/checkout@v3
+      
       - name: Install dependencies
         run: brew install yasm
+
       - name: Build
         run: ./scripts/build-macos.sh
-      - name: Archive artifacts
+
+      - name: Upload artifacts
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
         uses: actions/upload-artifact@v1
         with:
           name: pre-compiled-${{ matrix.target }}

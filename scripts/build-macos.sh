@@ -36,6 +36,7 @@ PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/f
 PATH="$HOME/bin:$PATH" make -j$(nproc) && \
 make install
 
+# ffmpeg
 FFMPEG_CONFIGURE_FLAGS=(
     --cc=/usr/bin/clang
     --prefix="$HOME/ffmpeg_build"
@@ -70,6 +71,5 @@ cd ffmpeg && \
 PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" \
 ./configure "${FFMPEG_CONFIGURE_FLAGS[@]}" || (cat ffbuild/config.log && exit 1) && \
 PATH="$HOME/bin:$PATH" make V=1 && \
-make install
-
-chown -R $(stat -f '%u:%g' $HOME) "$HOME/ffmpeg_build"
+make install && \
+hash -r
