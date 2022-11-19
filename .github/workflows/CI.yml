@@ -219,7 +219,7 @@ jobs:
         # https://developer.apple.com/documentation/apple-silicon/building-a-universal-macos-binary#Update-the-Architecture-List-of-Custom-Makefiles
         target:
           - x86_64-apple-macos10.9
-          - arm64-apple-macos11
+        #  - arm64-apple-macos11 - ignoring for now, issue with opus link
     env:
       TARGET: ${{ matrix.target }}
     steps:
