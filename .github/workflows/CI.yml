@@ -227,7 +227,7 @@ jobs:
       - name: Install dependencies
         run: brew install yasm
       - name: Build
-        run: ./build-macos.sh
+        run: ./scripts/build-macos.sh
       - name: Archive artifacts
         uses: actions/upload-artifact@v1
         with:
