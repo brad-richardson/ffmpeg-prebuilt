@@ -38,7 +38,7 @@ make install
 
 FFMPEG_CONFIGURE_FLAGS=(
     --cc=/usr/bin/clang
-    --prefix="$HOME/ffmpeg-$TARGET"
+    --prefix="$HOME/ffmpeg_build"
     --enable-cross-compile
     --target-os=darwin
     --arch=$ARCH
@@ -72,7 +72,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" \
 
 perl -pi -e 's{HAVE_MACH_MACH_TIME_H 1}{HAVE_MACH_MACH_TIME_H 0}' config.h
 
-make V=1
+PATH="$HOME/bin:$PATH" make V=1 && \
 make install
 
-chown -R $(stat -f '%u:%g' $HOME) "$HOME/ffmpeg-$TARGET"
+chown -R $(stat -f '%u:%g' $HOME) "$HOME/ffmpeg_build"
