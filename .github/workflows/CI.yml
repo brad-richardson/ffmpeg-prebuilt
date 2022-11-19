@@ -225,7 +225,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
-        run: brew install yasm opus
+        run: brew install yasm
       - name: Build
         run: ./scripts/build-macos.sh
       - name: Archive artifacts
