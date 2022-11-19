@@ -211,3 +211,31 @@ jobs:
           allowUpdates: true
           body: |
             Prebuilt ffmpeg libs for sunshine
+
+  macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        # https://developer.apple.com/documentation/apple-silicon/building-a-universal-macos-binary#Update-the-Architecture-List-of-Custom-Makefiles
+        target:
+          - x86_64-apple-macos10.9
+        #  - arm64-apple-macos11 - ignoring for now, issue with opus link
+    env:
+      TARGET: ${{ matrix.target }}
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install dependencies
+        run: brew install yasm
+
+      - name: Build
+        run: ./scripts/build-macos.sh
+
+      - name: Upload artifacts
+        if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
+        uses: actions/upload-artifact@v1
+        with:
+          name: pre-compiled-${{ matrix.target }}
+          path: |
+            ~/ffmpeg_build/include/
+            ~/ffmpeg_build/lib/
